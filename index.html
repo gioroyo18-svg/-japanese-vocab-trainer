@@ -1,1 +1,1122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Japanese Vocab Trainer</title>
 
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif;
+  background:#f3f4f6;
+  color:#111827
+}
+.app{
+  max-width:560px;
+  margin:auto;
+  min-height:100vh;
+  background:white;
+  padding:20px 18px 34px
+}
+h1{font-size:25px;margin:8px 0 4px}
+.sub{color:#6b7280;margin-bottom:18px}
+.screen{display:none}
+.screen.active{display:block}
+
+.card{
+  background:#f9fafb;
+  border-radius:18px;
+  padding:20px;
+  margin:14px 0;
+  box-shadow:0 2px 10px #0000000d
+}
+
+.menu-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:18px
+}
+.menu-btn{
+  min-height:112px;
+  background:#111827;
+  color:white;
+  border:0;
+  border-radius:18px;
+  padding:16px;
+  text-align:left
+}
+.menu-btn .icon{font-size:30px}
+.menu-btn .title{
+  display:block;
+  font-size:17px;
+  font-weight:800;
+  margin-top:8px
+}
+.menu-btn .desc{
+  display:block;
+  font-size:12px;
+  opacity:.75;
+  margin-top:3px
+}
+
+.back{
+  background:#e5e7eb;
+  color:#111827;
+  width:auto;
+  padding:10px 15px;
+  margin:0 0 10px
+}
+
+.section-title{
+  font-size:21px;
+  font-weight:800;
+  margin:8px 0
+}
+
+.word{
+  font-size:42px;
+  font-weight:700;
+  text-align:center;
+  margin:18px 0 5px
+}
+
+.meaning{
+  text-align:center;
+  color:#6b7280;
+  font-size:18px;
+  min-height:26px
+}
+
+.hint{
+  text-align:center;
+  color:#9ca3af;
+  font-size:13px;
+  margin-top:8px
+}
+
+.stats{
+  display:flex;
+  gap:10px
+}
+.stat{
+  flex:1;
+  background:#f3f4f6;
+  padding:12px 6px;
+  border-radius:12px;
+  text-align:center
+}
+.num{
+  font-size:22px;
+  font-weight:800
+}
+
+input{
+  width:100%;
+  padding:15px;
+  border:2px solid #d1d5db;
+  border-radius:12px;
+  font-size:22px;
+  text-align:center;
+  margin-top:16px
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:0;
+  border-radius:12px;
+  font-size:17px;
+  font-weight:700;
+  background:#111827;
+  color:white;
+  margin-top:10px
+}
+
+button.secondary{
+  background:#e5e7eb;
+  color:#111827
+}
+
+.feedback{
+  text-align:center;
+  font-size:18px;
+  font-weight:700;
+  margin-top:14px;
+  min-height:25px
+}
+
+.hidden{display:none}
+
+.mode{
+  display:flex;
+  gap:8px;
+  margin-bottom:15px
+}
+
+.mode button{
+  margin-top:0;
+  font-size:14px;
+  padding:11px
+}
+
+.mode button.active{
+  background:#111827;
+  color:white
+}
+
+.mode button:not(.active){
+  background:#e5e7eb;
+  color:#111827
+}
+
+.small{
+  font-size:13px;
+  color:#6b7280;
+  text-align:center;
+  margin-top:16px
+}
+
+.info{
+  font-size:15px;
+  line-height:1.6
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<h1>🇯🇵 Japanese Vocab Trainer</h1>
+<div class="sub">N5–N4 • Kanji • Hiragana • Daily Practice</div>
+
+
+<!-- HOME -->
+
+<section id="home" class="screen active">
+
+<div class="card">
+<div class="section-title">今日の日本語</div>
+<div class="info">
+Practice Japanese vocabulary every day.
+<br>
+毎日、日本語を練習しましょう！
+</div>
+</div>
+
+<div class="menu-grid">
+
+<button class="menu-btn" onclick="openScreen('kanji')">
+<span class="icon">漢</span>
+<span class="title">Kanji Quiz</span>
+<span class="desc">Kanji ↔ Hiragana</span>
+</button>
+
+<button class="menu-btn" onclick="openScreen('typing')">
+<span class="icon">あ</span>
+<span class="title">Typing Practice</span>
+<span class="desc">Hiragana practice</span>
+</button>
+
+<button class="menu-btn" onclick="openScreen('reading')">
+<span class="icon">📖</span>
+<span class="title">Reading Quiz</span>
+<span class="desc">Read Japanese sentences</span>
+</button>
+
+<button class="menu-btn" onclick="openScreen('grammar')">
+<span class="icon">文</span>
+<span class="title">Grammar Quiz</span>
+<span class="desc">N5–N4 Grammar</span>
+</button>
+
+</div>
+
+<div class="card">
+
+<div class="stats">
+
+<div class="stat">
+<div class="num" id="homeScore">0</div>
+Score
+</div>
+
+<div class="stat">
+<div class="num" id="homeAnswered">0</div>
+Today
+</div>
+
+<div class="stat">
+<div class="num" id="homeStreak">0</div>
+Streak
+</div>
+
+</div>
+
+</div>
+
+<div class="small">
+N5–N4 vocabulary • More words can be added
+</div>
+
+</section>
+
+
+<!-- KANJI -->
+
+<section id="kanji" class="screen">
+
+<button class="back" onclick="openScreen('home')">
+← Home
+</button>
+
+<div class="section-title">
+漢字 Kanji Quiz
+</div>
+
+<div class="card">
+
+<div class="mode">
+
+<button id="kanjiToHira"
+class="active"
+onclick="setKanjiMode('kanjiToHira')">
+Kanji → Hiragana
+</button>
+
+<button id="hiraToKanji"
+onclick="setKanjiMode('hiraToKanji')">
+Hiragana → Kanji
+</button>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<div class="num" id="kScore">0</div>
+Score
+</div>
+
+<div class="stat">
+<div class="num" id="kTotal">0</div>
+Answered
+</div>
+
+<div class="stat">
+<div class="num" id="kStreak">0</div>
+Streak
+</div>
+
+</div>
+
+<div id="kCounter" class="hint">
+Question 1
+</div>
+
+<div id="kWord" class="word">
+食べる
+</div>
+
+<div id="kMeaning" class="meaning">
+to eat
+</div>
+
+<div id="kHint" class="hint">
+Type the hiragana reading
+</div>
+
+<input
+id="kAnswer"
+placeholder="Type your answer"
+autocomplete="off"
+autocapitalize="none">
+
+<button onclick="checkKanji()">
+Check
+</button>
+
+<div id="kFeedback" class="feedback"></div>
+
+<button
+class="secondary hidden"
+id="kNext"
+onclick="nextKanji()">
+Next
+</button>
+
+</div>
+
+<button class="secondary" onclick="resetKanji()">
+Reset Kanji Score
+</button>
+
+</section>
+
+
+<!-- TYPING -->
+
+<section id="typing" class="screen">
+
+<button class="back" onclick="openScreen('home')">
+← Home
+</button>
+
+<div class="section-title">
+⌨️ Typing Practice
+</div>
+
+<div class="card">
+
+<div class="meaning">
+Type the reading in hiragana.
+</div>
+
+<div id="tWord" class="word">
+食べる
+</div>
+
+<input
+id="tAnswer"
+placeholder="たべる"
+autocomplete="off"
+autocapitalize="none">
+
+<button onclick="checkTyping()">
+Check
+</button>
+
+<div id="tFeedback" class="feedback"></div>
+
+<button
+class="secondary hidden"
+id="tNext"
+onclick="nextTyping()">
+Next
+</button>
+
+</div>
+
+</section>
+
+
+<!-- READING -->
+
+<section id="reading" class="screen">
+
+<button class="back" onclick="openScreen('home')">
+← Home
+</button>
+
+<div class="section-title">
+📖 Reading Quiz
+</div>
+
+<div class="card">
+
+<div id="rSentence" class="word">
+私は毎日日本語を勉強します。
+</div>
+
+<div class="meaning">
+I study Japanese every day.
+</div>
+
+<input
+id="rAnswer"
+placeholder="Type the meaning">
+
+<button onclick="checkReading()">
+Check
+</button>
+
+<div id="rFeedback" class="feedback"></div>
+
+<button
+class="secondary hidden"
+id="rNext"
+onclick="nextReading()">
+Next
+</button>
+
+</div>
+
+</section>
+
+
+<!-- GRAMMAR -->
+
+<section id="grammar" class="screen">
+
+<button class="back" onclick="openScreen('home')">
+← Home
+</button>
+
+<div class="section-title">
+文法 Grammar Quiz
+</div>
+
+<div class="card">
+
+<div id="gQuestion" class="word">
+日本へ行く＿＿、日本語を勉強しています。
+</div>
+
+<div class="meaning">
+Choose the correct grammar.
+</div>
+
+<button onclick="answerGrammar('ために')">
+ために
+</button>
+
+<button onclick="answerGrammar('ことになる')">
+ことになる
+</button>
+
+<button onclick="answerGrammar('らしい')">
+らしい
+</button>
+
+<div id="gFeedback" class="feedback"></div>
+
+<button
+class="secondary hidden"
+id="gNext"
+onclick="nextGrammar()">
+Next
+</button>
+
+</div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =========================
+   VOCABULARY DATABASE
+========================= */
+
+const words = [
+
+["食べる","たべる","to eat"],
+["飲む","のむ","to drink"],
+["見る","みる","to see / watch"],
+["聞く","きく","to listen / ask"],
+["行く","いく","to go"],
+["来る","くる","to come"],
+["帰る","かえる","to return home"],
+["買う","かう","to buy"],
+["読む","よむ","to read"],
+["書く","かく","to write"],
+["話す","はなす","to speak"],
+["使う","つかう","to use"],
+["待つ","まつ","to wait"],
+["作る","つくる","to make"],
+["分かる","わかる","to understand"],
+["住む","すむ","to live"],
+["働く","はたらく","to work"],
+["休む","やすむ","to rest"],
+["起きる","おきる","to wake up"],
+["寝る","ねる","to sleep"],
+["教える","おしえる","to teach / tell"],
+["習う","ならう","to learn"],
+["覚える","おぼえる","to memorize"],
+["忘れる","わすれる","to forget"],
+["始める","はじめる","to start"],
+["終わる","おわる","to finish"],
+["入る","はいる","to enter"],
+["出る","でる","to leave / exit"],
+["開ける","あける","to open"],
+["閉める","しめる","to close"],
+["立つ","たつ","to stand"],
+["座る","すわる","to sit"],
+["歩く","あるく","to walk"],
+["走る","はしる","to run"],
+["泳ぐ","およぐ","to swim"],
+["遊ぶ","あそぶ","to play"],
+["洗う","あらう","to wash"],
+["持つ","もつ","to hold / have"],
+["取る","とる","to take"],
+["置く","おく","to put"],
+["送る","おくる","to send"],
+["借りる","かりる","to borrow"],
+["貸す","かす","to lend"],
+["返す","かえす","to return"],
+["思う","おもう","to think"],
+["言う","いう","to say"],
+["知る","しる","to know"],
+["なる","なる","to become"],
+
+["作る","つくる","to make"],
+["造る","つくる","to manufacture / build"],
+["存在","そんざい","existence"],
+["存在する","そんざいする","to exist"],
+["授かる","さずかる","to be blessed with / receive"],
+["笑う","わらう","to laugh / smile"],
+["気づく","きづく","to notice / realize"],
+["気をつける","きをつける","to be careful"],
+
+["大きい","おおきい","big"],
+["小さい","ちいさい","small"],
+["新しい","あたらしい","new"],
+["古い","ふるい","old"],
+["暑い","あつい","hot"],
+["寒い","さむい","cold"],
+["熱い","あつい","hot to touch"],
+["冷たい","つめたい","cold to touch"],
+["楽しい","たのしい","fun"],
+["難しい","むずかしい","difficult"],
+["簡単","かんたん","easy / simple"],
+["早い","はやい","early / fast"],
+["遅い","おそい","late / slow"],
+["高い","たかい","high / expensive"],
+["安い","やすい","cheap"],
+["長い","ながい","long"],
+["短い","みじかい","short"],
+["多い","おおい","many"],
+["少ない","すくない","few"],
+["近い","ちかい","near"],
+["遠い","とおい","far"],
+["重い","おもい","heavy"],
+["軽い","かるい","light"],
+["強い","つよい","strong"],
+["弱い","よわい","weak"],
+["忙しい","いそがしい","busy"],
+["暇","ひま","free / not busy"],
+["元気","げんき","healthy / energetic"],
+["有名","ゆうめい","famous"],
+["便利","べんり","convenient"],
+["大切","たいせつ","important"],
+
+["学校","がっこう","school"],
+["先生","せんせい","teacher"],
+["学生","がくせい","student"],
+["友達","ともだち","friend"],
+["会社","かいしゃ","company"],
+["仕事","しごと","work / job"],
+["電車","でんしゃ","train"],
+["駅","えき","station"],
+["電気","でんき","electricity / light"],
+["電話","でんわ","telephone"],
+["時間","じかん","time"],
+["毎日","まいにち","every day"],
+["今日","きょう","today"],
+["明日","あした","tomorrow"],
+["昨日","きのう","yesterday"],
+["朝","あさ","morning"],
+["昼","ひる","noon / daytime"],
+["夜","よる","night"],
+["名前","なまえ","name"],
+["日本","にほん","Japan"],
+["外国","がいこく","foreign country"],
+["家","いえ","house / home"],
+["部屋","へや","room"],
+["食事","しょくじ","meal"],
+["料理","りょうり","cooking / dish"],
+["水","みず","water"],
+["お茶","おちゃ","tea"],
+["お金","おかね","money"],
+["店","みせ","shop"],
+["病院","びょういん","hospital"],
+["天気","てんき","weather"],
+["雨","あめ","rain"],
+["雪","ゆき","snow"],
+["山","やま","mountain"],
+["川","かわ","river"],
+["海","うみ","sea"],
+["車","くるま","car"],
+["自転車","じてんしゃ","bicycle"],
+["道","みち","road / way"],
+["問題","もんだい","problem / question"],
+["答え","こたえ","answer"],
+["意味","いみ","meaning"],
+["言葉","ことば","word / language"],
+["漢字","かんじ","kanji"],
+["勉強","べんきょう","study"],
+["練習","れんしゅう","practice"]
+
+];
+
+
+/* =========================
+   GENERAL
+========================= */
+
+const $ = id => document.getElementById(id);
+
+function openScreen(id){
+
+document.querySelectorAll(".screen")
+.forEach(s=>s.classList.remove("active"));
+
+$(id).classList.add("active");
+
+if(id==="kanji") showKanji();
+if(id==="typing") showTyping();
+if(id==="reading") showReading();
+if(id==="grammar") showGrammar();
+
+window.scrollTo(0,0);
+
+}
+
+
+/* =========================
+   KANJI QUIZ
+========================= */
+
+let kMode="kanjiToHira";
+let kIndex=0;
+let kScore=0;
+let kTotal=0;
+let kStreak=0;
+let kAnswered=false;
+
+function today(){
+
+return new Date()
+.toISOString()
+.slice(0,10);
+
+}
+
+function loadStats(){
+
+let s=JSON.parse(
+localStorage.getItem("japaneseTrainerStats")||"{}"
+);
+
+if(s.date===today()){
+
+kScore=s.score||0;
+kTotal=s.total||0;
+kStreak=s.streak||0;
+
+}
+
+}
+
+function saveStats(){
+
+localStorage.setItem(
+"japaneseTrainerStats",
+JSON.stringify({
+date:today(),
+score:kScore,
+total:kTotal,
+streak:kStreak
+})
+);
+
+}
+
+function updateStats(){
+
+$("kScore").textContent=kScore;
+$("kTotal").textContent=kTotal;
+$("kStreak").textContent=kStreak;
+
+$("homeScore").textContent=kScore;
+$("homeAnswered").textContent=kTotal;
+$("homeStreak").textContent=kStreak;
+
+}
+
+function setKanjiMode(mode){
+
+kMode=mode;
+
+$("kanjiToHira")
+.classList.toggle("active",mode==="kanjiToHira");
+
+$("hiraToKanji")
+.classList.toggle("active",mode==="hiraToKanji");
+
+showKanji();
+
+}
+
+function showKanji(){
+
+kIndex=Math.floor(
+Math.random()*words.length
+);
+
+kAnswered=false;
+
+let w=words[kIndex];
+
+$("kWord").textContent=
+kMode==="kanjiToHira"
+?w[0]
+:w[1];
+
+$("kMeaning").textContent=w[2];
+
+$("kHint").textContent=
+kMode==="kanjiToHira"
+?"Type the hiragana reading"
+:"Type the kanji";
+
+$("kCounter").textContent=
+"Question "+(kTotal+1);
+
+$("kAnswer").value="";
+$("kFeedback").textContent="";
+$("kNext").classList.add("hidden");
+
+setTimeout(()=>$("kAnswer").focus(),50);
+
+}
+
+function checkKanji(){
+
+if(kAnswered)return;
+
+let answer=$("kAnswer")
+.value
+.trim()
+.normalize("NFKC");
+
+if(!answer){
+
+$("kFeedback").textContent=
+"Type your answer first.";
+
+return;
+
+}
+
+let w=words[kIndex];
+
+let correct=
+kMode==="kanjiToHira"
+?w[1]
+:w[0];
+
+kAnswered=true;
+kTotal++;
+
+if(answer===correct){
+
+kScore++;
+kStreak++;
+
+$("kFeedback").textContent=
+"✅ Correct! "+correct;
+
+}else{
+
+kStreak=0;
+
+$("kFeedback").textContent=
+"❌ Correct answer: "+correct;
+
+}
+
+updateStats();
+saveStats();
+
+$("kNext").classList.remove("hidden");
+
+}
+
+function nextKanji(){
+
+showKanji();
+
+}
+
+function resetKanji(){
+
+if(confirm("Reset today's Kanji score?")){
+
+kScore=0;
+kTotal=0;
+kStreak=0;
+
+saveStats();
+updateStats();
+showKanji();
+
+}
+
+}
+
+
+/* =========================
+   TYPING
+========================= */
+
+let tIndex=0;
+let tAnswered=false;
+
+function showTyping(){
+
+tIndex=Math.floor(
+Math.random()*words.length
+);
+
+tAnswered=false;
+
+let w=words[tIndex];
+
+$("tWord").textContent=w[0];
+$("tAnswer").value="";
+$("tFeedback").textContent="";
+$("tNext").classList.add("hidden");
+
+setTimeout(()=>$("tAnswer").focus(),50);
+
+}
+
+function checkTyping(){
+
+if(tAnswered)return;
+
+let answer=$("tAnswer")
+.value
+.trim()
+.normalize("NFKC");
+
+let correct=words[tIndex][1];
+
+if(!answer){
+
+$("tFeedback").textContent=
+"Type your answer first.";
+
+return;
+
+}
+
+tAnswered=true;
+
+$("tFeedback").textContent=
+answer===correct
+?"✅ Correct!"
+:"❌ Correct answer: "+correct;
+
+$("tNext").classList.remove("hidden");
+
+}
+
+function nextTyping(){
+
+showTyping();
+
+}
+
+
+/* =========================
+   READING
+========================= */
+
+const readings=[
+
+[
+"私は毎日日本語を勉強します。",
+"I study Japanese every day."
+],
+
+[
+"明日、会社へ行きます。",
+"I will go to the company tomorrow."
+],
+
+[
+"昨日、友達と映画を見ました。",
+"I watched a movie with my friend yesterday."
+],
+
+[
+"日本の料理が好きです。",
+"I like Japanese food."
+],
+
+[
+"毎朝、電車で学校へ行きます。",
+"I go to school by train every morning."
+]
+
+];
+
+let rIndex=0;
+
+function showReading(){
+
+rIndex=Math.floor(
+Math.random()*readings.length
+);
+
+$("rSentence").textContent=
+readings[rIndex][0];
+
+$("rAnswer").value="";
+$("rFeedback").textContent="";
+$("rNext").classList.add("hidden");
+
+}
+
+function checkReading(){
+
+let answer=$("rAnswer").value
+.trim()
+.toLowerCase();
+
+if(!answer){
+
+$("rFeedback").textContent=
+"Type your answer first.";
+
+return;
+
+}
+
+let correct=
+readings[rIndex][1].toLowerCase();
+
+if(answer===correct){
+
+$("rFeedback").textContent=
+"✅ Correct!";
+
+}else{
+
+$("rFeedback").textContent=
+"❌ Answer: "+readings[rIndex][1];
+
+}
+
+$("rNext").classList.remove("hidden");
+
+}
+
+function nextReading(){
+
+showReading();
+
+}
+
+
+/* =========================
+   GRAMMAR
+========================= */
+
+const grammarQuestions=[
+
+[
+"日本へ行く＿＿、日本語を勉強しています。",
+"ために",
+["ために","ことになる","らしい"]
+],
+
+[
+"来年、日本へ行く＿＿なりました。",
+"ことに",
+["ことに","ために","ように"]
+],
+
+[
+"先生は私にもっと勉強する＿＿言いました。",
+"ように",
+["ように","ことに","らしい"]
+],
+
+[
+"彼は日本人＿＿です。",
+"らしい",
+["らしい","ために","ことになる"]
+]
+
+];
+
+let gIndex=0;
+
+function showGrammar(){
+
+gIndex=Math.floor(
+Math.random()*grammarQuestions.length
+);
+
+let q=grammarQuestions[gIndex];
+
+$("gQuestion").textContent=q[0];
+
+$("gFeedback").textContent="";
+$("gNext").classList.add("hidden");
+
+}
+
+function answerGrammar(answer){
+
+let correct=
+grammarQuestions[gIndex][1];
+
+if(answer===correct){
+
+$("gFeedback").textContent=
+"✅ Correct!";
+
+}else{
+
+$("gFeedback").textContent=
+"❌ Correct answer: "+correct;
+
+}
+
+$("gNext").classList.remove("hidden");
+
+}
+
+function nextGrammar(){
+
+showGrammar();
+
+}
+
+
+/* =========================
+   ENTER KEY
+========================= */
+
+$("kAnswer").addEventListener(
+"keydown",
+e=>{
+if(e.key==="Enter")checkKanji();
+}
+);
+
+$("tAnswer").addEventListener(
+"keydown",
+e=>{
+if(e.key==="Enter")checkTyping();
+}
+);
+
+$("rAnswer").addEventListener(
+"keydown",
+e=>{
+if(e.key==="Enter")checkReading();
+}
+);
+
+
+/* START */
+
+loadStats();
+updateStats();
+showKanji();
+
+</script>
+
+</body>
+</html>
