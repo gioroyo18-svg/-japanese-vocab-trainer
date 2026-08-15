@@ -1608,9 +1608,69 @@ return [...array].sort(() => Math.random() - 0.5);
 
 function showGrammar() {
 
+gIndex = Math.floor(
+Math.random() * grammarQuestions.length
+);
+
+gAnswered = false;
+
+const q = grammarQuestions[gIndex];
+
+$("gQuestion").textContent = q.question;
+
+$("gFeedback").textContent = "";
+
+$("gNext").classList.add("hidden");
+
+const container = $("gChoices");
+
+container.innerHTML = "";
+
+const choices = shuffleArray(q.choices);
+
+choices.forEach(choice => {
+
+const button = document.createElement("button");
+
+button.textContent = choice;
+
+button.onclick = () => answerGrammar(choice);
+
+container.appendChild(button);
+
+});
+
+}
+
+function answerGrammar(answer) {
+
+if (gAnswered) return;
+
+gAnswered = true;
+
+const correct =
+grammarQuestions[gIndex].answer;
+
+if (answer === correct) {
+
+$("gFeedback").textContent =
+"✅ Correct!";
+
+} else {
+
+$("gFeedback").textContent =
+"❌ Correct answer: " + correct;
+
+}
+
+$("gNext").classList.remove("hidden");
+
+}
 
 function nextGrammar() {
+
 showGrammar();
+
 }
 
 
