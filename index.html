@@ -1535,38 +1535,139 @@ showReading();
 /* =========================
    GRAMMAR
 ========================= */
+const grammarQuestions = [
 
-const grammarQuestions=[
+{
+question: "日本へ行く＿＿、日本語を勉強しています。",
+answer: "ために",
+choices: ["ために","ように","らしい","ことになる"]
+},
 
-[
-"日本へ行く＿＿、日本語を勉強しています。",
-"ために",
-["ために","ことになる","らしい"]
-],
+{
+question: "来月から東京で働く＿＿なりました。",
+answer: "ことに",
+choices: ["ことに","ために","らしい","ように"]
+},
 
-[
-"来年、日本へ行く＿＿なりました。",
-"ことに",
-["ことに","ために","ように"]
-],
+{
+question: "先生は毎日漢字を勉強する＿＿言いました。",
+answer: "ように",
+choices: ["ように","ために","ことに","らしい"]
+},
 
-[
-"先生は私にもっと勉強する＿＿言いました。",
-"ように",
-["ように","ことに","らしい"]
-],
+{
+question: "あの人は日本人＿＿です。",
+answer: "らしい",
+choices: ["らしい","ように","ために","ことに"]
+},
 
-[
-"彼は日本人＿＿です。",
-"らしい",
-["らしい","ために","ことになる"]
-]
+{
+question: "健康の＿＿、毎日運動しています。",
+answer: "ために",
+choices: ["ために","らしい","ことに","ように"]
+},
+
+{
+question: "忘れない＿＿、メモしてください。",
+answer: "ように",
+choices: ["ように","ために","らしい","ことに"]
+},
+
+{
+question: "来週から新しい仕事をする＿＿なりました。",
+answer: "ことに",
+choices: ["ことに","ために","ように","らしい"]
+},
+
+{
+question: "日本語が上手になる＿＿、毎日練習しています。",
+answer: "ために",
+choices: ["ために","らしい","ことに","ように"]
+},
+
+{
+question: "先生に毎日漢字を書く＿＿言われました。",
+answer: "ように",
+choices: ["ように","ために","らしい","ことに"]
+},
+
+{
+question: "雨が降る＿＿なので、傘を持って行きましょう。",
+answer: "らしい",
+choices: ["らしい","ために","ことに","ように"]
+}
 
 ];
 
-let gIndex=0;
+let gIndex = 0;
+let gAnswered = false;
 
-function showGrammar(){
+function shuffleArray(array) {
+return [...array].sort(() => Math.random() - 0.5);
+}
+
+function showGrammar() {
+
+gIndex = Math.floor(
+Math.random() * grammarQuestions.length
+);
+
+gAnswered = false;
+
+const q = grammarQuestions[gIndex];
+
+$("gQuestion").textContent = q.question;
+$("gFeedback").textContent = "";
+$("gNext").classList.add("hidden");
+
+const container = $("gChoices");
+
+container.innerHTML = "";
+
+const choices = shuffleArray(q.choices);
+
+choices.forEach(choice => {
+
+const button = document.createElement("button");
+
+button.textContent = choice;
+
+button.onclick = () => answerGrammar(choice);
+
+container.appendChild(button);
+
+});
+
+}
+
+function answerGrammar(answer) {
+
+if (gAnswered) return;
+
+gAnswered = true;
+
+const correct =
+grammarQuestions[gIndex].answer;
+
+if (answer === correct) {
+
+$("gFeedback").textContent =
+"✅ Correct!";
+
+} else {
+
+$("gFeedback").textContent =
+"❌ Correct answer: " + correct;
+
+}
+
+$("gNext").classList.remove("hidden");
+
+}
+
+function nextGrammar() {
+showGrammar();
+}
 
 gIndex=Math.floor(
 Math.random()*grammarQuestions.length
