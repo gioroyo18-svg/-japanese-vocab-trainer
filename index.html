@@ -184,6 +184,87 @@ button.secondary{
   font-size:15px;
   line-height:1.6
 }
+  /* KANJI LIBRARY */
+
+.kanji-level-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:15px;
+}
+
+.kanji-level-btn{
+  background:#111827;
+  color:white;
+  border:0;
+  border-radius:16px;
+  padding:18px 12px;
+  min-height:85px;
+  font-size:18px;
+  font-weight:800;
+}
+
+.kanji-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:15px;
+}
+
+.kanji-row{
+  display:grid;
+  grid-template-columns:55px 1fr 1fr 1fr;
+  gap:8px;
+  align-items:center;
+  background:#f9fafb;
+  border-radius:14px;
+  padding:13px 10px;
+}
+
+.kanji-char{
+  font-size:30px;
+  font-weight:800;
+}
+
+.kanji-info{
+  font-size:12px;
+  color:#6b7280;
+}
+
+.kanji-reading{
+  font-size:13px;
+  font-weight:700;
+}
+
+.kanji-detail{
+  text-align:center;
+  padding:20px;
+}
+
+.kanji-big{
+  font-size:72px;
+  font-weight:800;
+  margin:10px 0;
+}
+
+.kanji-detail-row{
+  background:#f3f4f6;
+  border-radius:12px;
+  padding:12px;
+  margin:8px 0;
+  text-align:left;
+}
+
+.kanji-detail-label{
+  font-size:12px;
+  color:#6b7280;
+}
+
+.kanji-detail-value{
+  font-size:18px;
+  font-weight:700;
+  margin-top:3px;
+}
 </style>
 </head>
 
@@ -194,7 +275,117 @@ button.secondary{
 <h1>🇯🇵 Japanese Vocab Trainer</h1>
 <div class="sub">N5–N4 • Kanji • Hiragana • Daily Practice</div>
 
+<!-- KANJI LIBRARY -->
 
+<section id="kanjiLibrary" class="screen">
+
+<button class="back" onclick="openScreen('home')">
+← Home
+</button>
+
+<div class="section-title">
+漢字 Kanji Library
+</div>
+
+<div class="card">
+<div class="info">
+JLPT Kanji Reference
+<br>
+Kanji • Meaning • Onyomi • Kunyomi
+</div>
+
+<div class="kanji-level-grid">
+
+<button class="kanji-level-btn" onclick="openKanjiLevel('N5')">
+N5<br>
+<span style="font-size:12px;font-weight:400">105 Kanji</span>
+</button>
+
+<button class="kanji-level-btn" onclick="openKanjiLevel('N4')">
+N4<br>
+<span style="font-size:12px;font-weight:400">195 Kanji</span>
+</button>
+
+<button class="kanji-level-btn" onclick="openKanjiLevel('N3')">
+N3<br>
+<span style="font-size:12px;font-weight:400">316 Kanji</span>
+</button>
+
+<button class="kanji-level-btn" onclick="openKanjiLevel('N2')">
+N2<br>
+<span style="font-size:12px;font-weight:400">374 Kanji</span>
+</button>
+
+<button class="kanji-level-btn" onclick="openKanjiLevel('N1')">
+N1<br>
+<span style="font-size:12px;font-weight:400">Kanji</span>
+</button>
+
+</div>
+</div>
+
+</section>
+
+
+<!-- KANJI LEVEL -->
+
+<section id="kanjiLevel" class="screen">
+
+<button class="back" onclick="openScreen('kanjiLibrary')">
+← Kanji Library
+</button>
+
+<div id="kanjiLevelTitle" class="section-title">
+N5 Kanji
+</div>
+
+<div class="card">
+
+<div class="kanji-row" style="font-weight:800;background:#e5e7eb;">
+<div>#</div>
+<div>Kanji</div>
+<div>Onyomi</div>
+<div>Kunyomi</div>
+</div>
+
+<div id="kanjiList" class="kanji-list"></div>
+
+</div>
+
+</section>
+
+
+<!-- KANJI DETAIL -->
+
+<section id="kanjiDetail" class="screen">
+
+<button class="back" onclick="openScreen('kanjiLevel')">
+← Kanji List
+</button>
+
+<div class="card kanji-detail">
+
+<div id="detailKanji" class="kanji-big">
+一
+</div>
+
+<div id="detailMeaning" class="meaning">
+one
+</div>
+
+<div class="kanji-detail-row">
+<div class="kanji-detail-label">Onyomi</div>
+<div id="detailOnyomi" class="kanji-detail-value">イチ・イツ</div>
+</div>
+
+<div class="kanji-detail-row">
+<div class="kanji-detail-label">Kunyomi</div>
+<div id="detailKunyomi" class="kanji-detail-value">ひと・ひとつ</div>
+</div>
+
+</div>
+
+</section>
 <!-- HOME -->
 
 <section id="home" class="screen active">
