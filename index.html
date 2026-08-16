@@ -401,6 +401,11 @@ Practice Japanese vocabulary every day.
 
 <div class="menu-grid">
 
+<button class="menu-btn" onclick="openScreen('kanjiLibrary')">
+<span class="icon">漢</span>
+<span class="title">Kanji Library</span>
+<span class="desc">N5–N1 Kanji Reference</span>
+</button>  
 <button class="menu-btn" onclick="openScreen('kanji')">
 <span class="icon">漢</span>
 <span class="title">Kanji Quiz</span>
@@ -1681,7 +1686,67 @@ if(id==="grammar") showGrammar();
 window.scrollTo(0,0);
 
 }
+/* =========================
+   KANJI LIBRARY
+========================= */
 
+function openKanjiLevel(level){
+
+  $("kanjiLevelTitle").textContent =
+    level + " Kanji";
+
+  const list = $("kanjiList");
+
+  list.innerHTML = "";
+
+  const data = kanjiData[level] || [];
+
+  data.forEach((k, index) => {
+
+    const row = document.createElement("div");
+
+    row.className = "kanji-row";
+
+    row.innerHTML = `
+      <div>${index + 1}</div>
+
+      <div
+        class="kanji-char"
+        style="cursor:pointer"
+        onclick="openKanjiDetail('${level}',${index})">
+        ${k.kanji}
+      </div>
+
+      <div class="kanji-reading">
+        ${k.onyomi || "—"}
+      </div>
+
+      <div class="kanji-reading">
+        ${k.kunyomi || "—"}
+      </div>
+    `;
+
+    list.appendChild(row);
+
+  });
+
+  window.scrollTo(0,0);
+
+  openScreen("kanjiLevel");
+}
+
+
+function openKanjiDetail(level,index){
+
+  const k = kanjiData[level][index];
+
+  $("detailKanji").textContent = k.kanji;
+  $("detailMeaning").textContent = k.meaning;
+  $("detailOnyomi").textContent = k.onyomi || "—";
+  $("detailKunyomi").textContent = k.kunyomi || "—";
+
+  openScreen("kanjiDetail");
+}
 
 /* =========================
    KANJI QUIZ
