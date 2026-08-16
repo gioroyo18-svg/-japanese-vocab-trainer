@@ -213,7 +213,7 @@ button.secondary{
 
 .kanji-row{
   display:grid;
-  grid-template-columns:55px 1fr 1fr 1fr;
+  grid-template-columns:35px 50px 1fr 1fr 1fr;
   gap:8px;
   align-items:center;
   background:#f9fafb;
@@ -346,8 +346,8 @@ N5 Kanji
 <div>Kanji</div>
 <div>Onyomi</div>
 <div>Kunyomi</div>
+<div>Meaning</div>
 </div>
-
 <div id="kanjiList" class="kanji-list"></div>
 
 </div>
@@ -1707,21 +1707,10 @@ function openKanjiLevel(level){
 
     row.innerHTML = `
       <div>${index + 1}</div>
-
-      <div
-        class="kanji-char"
-        style="cursor:pointer"
-        onclick="openKanjiDetail('${level}',${index})">
-        ${k[0]}
-      </div>
-
-      <div class="kanji-reading">
-        ${k[2] || "—"}
-      </div>
-
-      <div class="kanji-reading">
-        ${k[3] || "—"}
-      </div>
+      <div class="kanji-char">${k[0]}</div>
+      <div class="kanji-reading">${k[2] || "—"}</div>
+      <div class="kanji-reading">${k[3] || "—"}</div>
+      <div class="kanji-info">${k[1]}</div>
     `;
 
     list.appendChild(row);
