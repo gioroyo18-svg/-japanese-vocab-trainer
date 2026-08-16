@@ -1692,11 +1692,9 @@ window.scrollTo(0,0);
 
 function openKanjiLevel(level){
 
-  $("kanjiLevelTitle").textContent =
-    level + " Kanji";
+  $("kanjiLevelTitle").textContent = level + " Kanji";
 
   const list = $("kanjiList");
-
   list.innerHTML = "";
 
   const data = kanjiData[level] || [];
@@ -1714,15 +1712,15 @@ function openKanjiLevel(level){
         class="kanji-char"
         style="cursor:pointer"
         onclick="openKanjiDetail('${level}',${index})">
-        ${k.kanji}
+        ${k[0]}
       </div>
 
       <div class="kanji-reading">
-        ${k.onyomi || "—"}
+        ${k[2] || "—"}
       </div>
 
       <div class="kanji-reading">
-        ${k.kunyomi || "—"}
+        ${k[3] || "—"}
       </div>
     `;
 
@@ -1730,20 +1728,19 @@ function openKanjiLevel(level){
 
   });
 
-  window.scrollTo(0,0);
-
   openScreen("kanjiLevel");
-}
 
+  window.scrollTo(0,0);
+}
 
 function openKanjiDetail(level,index){
 
   const k = kanjiData[level][index];
 
-  $("detailKanji").textContent = k.kanji;
-  $("detailMeaning").textContent = k.meaning;
-  $("detailOnyomi").textContent = k.onyomi || "—";
-  $("detailKunyomi").textContent = k.kunyomi || "—";
+  $("detailKanji").textContent = k[0];
+  $("detailMeaning").textContent = k[1];
+  $("detailOnyomi").textContent = k[2] || "—";
+  $("detailKunyomi").textContent = k[3] || "—";
 
   openScreen("kanjiDetail");
 }
