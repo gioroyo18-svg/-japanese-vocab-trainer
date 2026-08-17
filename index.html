@@ -5,7 +5,70 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111827">
 <title>Japanese Vocab Trainer</title>
+/* N5 KANJI LIST */
 
+.n5-list-header{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  padding:10px 12px;
+  margin-bottom:8px;
+  font-size:12px;
+  font-weight:800;
+  color:#6b7280;
+}
+
+.n5-kanji-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.n5-kanji-row{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  align-items:center;
+  padding:14px 12px;
+  border-radius:14px;
+  background:#f9fafb;
+  border:1px solid #e5e7eb;
+  cursor:pointer;
+  transition:transform .15s,background .15s;
+}
+
+.n5-kanji-row:active{
+  transform:scale(.98);
+  background:#eff6ff;
+}
+
+.n5-kanji-word{
+  font-size:24px;
+  font-weight:800;
+  color:#2563eb;
+}
+
+.n5-kanji-hira{
+  font-size:17px;
+  font-weight:700;
+  color:#16a34a;
+}
+
+.n5-kanji-meaning{
+  font-size:14px;
+  color:#374151;
+}
+
+.n5-badge{
+  display:inline-block;
+  background:#2563eb;
+  color:white;
+  font-size:11px;
+  font-weight:800;
+  padding:4px 8px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
 <style>
 *{box-sizing:border-box}
 body{
@@ -341,19 +404,17 @@ N5 Kanji
 
 <div class="card">
 
-<div class="kanji-row" style="font-weight:800;background:#e5e7eb;">
-<div>#</div>
-<div>Kanji</div>
-<div>Onyomi</div>
-<div>Kunyomi</div>
-<div>Meaning</div>
+<div class="n5-list-header">
+<span>Kanji</span>
+<span>Hiragana</span>
+<span>Meaning</span>
 </div>
-<div id="kanjiList" class="kanji-list"></div>
+
+<div id="kanjiList" class="n5-kanji-list"></div>
 
 </div>
 
 </section>
-
 
 <!-- KANJI DETAIL -->
 
@@ -363,6 +424,10 @@ N5 Kanji
 ← Kanji List
 </button>
 
+<div class="section-title">
+Kanji Details
+</div>
+
 <div class="card kanji-detail">
 
 <div id="detailKanji" class="kanji-big">
@@ -370,17 +435,16 @@ N5 Kanji
 </div>
 
 <div id="detailMeaning" class="meaning">
-one
+いち<br>one
 </div>
 
-<div class="kanji-detail-row">
-<div class="kanji-detail-label">Onyomi</div>
-<div id="detailOnyomi" class="kanji-detail-value">イチ・イツ</div>
+<div id="detailOnyomi"></div>
+
+<div class="other-words-title">
+Other Words
 </div>
 
-<div class="kanji-detail-row">
-<div class="kanji-detail-label">Kunyomi</div>
-<div id="detailKunyomi" class="kanji-detail-value">ひと・ひとつ</div>
+<div id="detailOtherWords" class="other-words">
 </div>
 
 </div>
@@ -2246,7 +2310,129 @@ if(e.key==="Enter")checkReading();
 loadStats();
 updateStats();
 showKanji();
+/* =========================
+   NEW N5 KANJI LIST
+========================= */
 
+function openKanjiLevel(level){
+
+  if(level !== "N5"){
+    alert("N5 muna ang available.");
+    return;
+  }
+
+  document.getElementById("kanjiLevelTitle").innerHTML =
+    '<span class="n5-badge">JLPT N5</span><br>N5 Kanji';
+
+  const list = document.getElementById("kanjiList");
+
+  list.innerHTML = "";
+
+  const n5Words = words.filter(item => {
+
+    const word = item[0];
+
+    return kanjiData.N5.some(k =>
+      [...word].includes(k[0])
+    );
+
+  });
+
+  const uniqueWords = [];
+  const seen = new Set();
+
+  n5Words.forEach(item => {
+
+    const key = item[0] + "|" + item[1];
+
+    if(!seen.has(key)){
+      seen.add(key);
+      uniqueWords.push(item);
+    }
+
+  });
+
+  uniqueWords.forEach(item => {
+
+    const kanji = item[0];
+    const hira = item[1];
+    const meaning = item[2];
+
+    const row = document.createElement("div");
+
+    row.className = "n5-kanji-row";
+
+    row.innerHTML = `
+      <div class="n5-kanji-word">${kanji}</div>
+      <div class="n5-kanji-hira">${hira}</div>
+      <div class="n5-kanji-meaning">${meaning}</div>
+    `;
+
+    row.onclick = function(){
+      openN5WordDetail(kanji, hira, meaning);
+    };
+
+    list.appendChild(row);
+
+  });
+
+  openScreen("kanjiLevel");
+}
+
+
+/* =========================
+   N5 WORD DETAIL
+========================= */
+
+function openN5WordDetail(word, reading, meaning){
+
+  document.getElementById("detailKanji").textContent = word;
+
+  document.getElementById("detailMeaning").innerHTML =
+    `${reading}<br>${meaning}`;
+
+  const detailOnyomi =
+    document.getElementById("detailOnyomi");
+
+  const detailKunyomi =
+    document.getElementById("detailKunyomi");
+
+  const characters = [...word];
+
+  const details = characters
+    .map(char => {
+
+      const data = kanjiData.N5.find(k => k[0] === char);
+
+      if(!data){
+        return `
+          <div class="kanji-detail-row">
+            <div class="kanji-detail-label">${char}</div>
+            <div class="kanji-detail-value">
+              Not in N5 database
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="kanji-detail-row">
+          <div class="kanji-detail-label">${char}</div>
+          <div class="kanji-detail-value">
+            Onyomi: ${data[2]}<br>
+            Kunyomi: ${data[3]}
+          </div>
+        </div>
+      `;
+
+    })
+    .join("");
+
+  detailOnyomi.innerHTML = details;
+  detailKunyomi.innerHTML = "";
+
+  openScreen("kanjiDetail");
+}
 </script>
 
 </body>
